@@ -1,0 +1,37 @@
+name: CI mentoria
+
+# gatilhos -> quando esse pipeline deve executar
+on:
+  workflow_dispatch:
+
+# [declarações]
+jobs:
+  testes:
+
+    # [config do SO] (Docker, windows/linux/mac, chrome/firefox/edge, etc.)
+    runs-on: ubuntu-latest
+
+    # [variaveis] (variáveis de ambiente, chaves de acesso)
+    env:
+      API_BASE_URL: 'http://localhost:3000'
+      PORT: 4000
+
+    # [acoes ou passos] (sucesso, ignorado, cancelado, falha)
+    steps:
+      # [projetos] (aplicacoes, projetos de teste, fe/be, etc.)
+      - name: Clone do Projeto
+        uses: actions/checkout@v4
+
+      # [deps do projeto]
+      - name: Instalando as dependências do projeto
+        run: npm install
+
+      - name: Iniciando o servidor de mocks
+        run: npm run mock-server
+
+      - name: Iniciar o servidor de aplicacao
+        run: npm run server &
+
+      - name: Executando os testes do projeto
+        run: npx cypress run
+    
